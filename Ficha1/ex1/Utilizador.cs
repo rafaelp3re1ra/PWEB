@@ -1,7 +1,6 @@
 ﻿namespace GestorDeTarefas;
 
-
-class Utilizador
+internal class Utilizador
 {
     public string Nome { get; }
     public List<Tarefa> Tarefas { get; }
