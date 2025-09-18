@@ -1,5 +1,4 @@
-﻿namespace ex1;
-
+﻿namespace GestorDeTarefas;
 enum TipoPrioridade { baixa, normal, alta };
 enum TipoCategoria { pessoal, trabalho };
 enum TipoEstado { executar, execucao, concluida };
@@ -22,5 +21,9 @@ class Tarefa
         Nome = nome;
         DataRegisto = dataRegisto;
         DataLimite = dataLimite;
+    }
+    public void MostrarTarefa()
+    {
+        Console.WriteLine("{0} | {1} | {2} | {3} | {4} | {5}", Nome, Prioridade, Categoria, Estado, DataRegisto, DataLimite);
     }
 }
