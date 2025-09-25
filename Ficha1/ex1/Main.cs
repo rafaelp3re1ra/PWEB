@@ -1,6 +1,6 @@
 ﻿namespace GestorDeTarefas;
 
-class Main
+class Program
 {
     static void Main(string[] args)
     {
@@ -15,12 +15,31 @@ class Main
         u.AdicionarTarefa(dataLimite: "15/05/2024 15:30", estado: TipoEstado.concluida);
 
         u.AdicionarTarefa(nome: "Concluida", estado: TipoEstado.concluida);
-        u.AdicionarTarefa(nome: "Pessoal", categoria: TipoPrioridade.pessoal);
-        u.AdicionarTarefa(nome: "Baixa", prioridade, prioridade: TipoPrioridade.baixa);
+        u.AdicionarTarefa(nome: "Pessoal", categoria: TipoCategoria.pessoal);
+        u.AdicionarTarefa(nome: "Baixa", prioridade: TipoPrioridade.baixa);
 
         //Mock teste
         u.MostraTarefas(u.Tarefas, "\nTodas as Tarefas\n");
-        u.MostraTarefas(u.TarefasAtrasdas(DateTime.Now), "\nTarefas Atrasadas\n");
+        u.MostraTarefas(u.TarefasAtrasadas(DateTime.Now), "\nTarefas Atrasadas\n");
 
+        Console.ReadKey();
+
+        //Porque usamos o Enum.GetValues?
+        //Porque vamos iterar as listas onde é possível aparecerem todos os tipos e assim o "Enum.GetValues" automatiza e evita código repetitivo
+
+        foreach (TipoCategoria tipo in Enum.GetValues(typeof(TipoCategoria)))
+            u.MostraTarefas(u.ListaDeTarefas(tipo), $"\nCategoria: {tipo.ToString()}\n");
+
+        foreach (TipoPrioridade tipo in Enum.GetValues(typeof(TipoPrioridade)))
+            u.MostraTarefas(u.ListaDeTarefas(tipo), $"\nCategoria: {tipo.ToString()}\n");
+
+        foreach (TipoEstado tipo in Enum.GetValues(typeof(TipoEstado)))
+            u.MostraTarefas(u.ListaDeTarefas(tipo), $"\nCategoria: {tipo.ToString()}\n");
+
+        u.MostraTarefas(u.RemoverTarefas(TipoEstado.concluida), "\nRetirdas das concluidas");
+        u.MostraTarefas(u.RemoverTarefas(TipoCategoria.pessoal), "\nRetirdas das pessoais");
+        u.MostraTarefas(u.RemoverTarefas(TipoPrioridade.baixa), "\nRetirdas das baixas");
+
+        Console.ReadKey();
     }
 }
