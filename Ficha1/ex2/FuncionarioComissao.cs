@@ -9,6 +9,10 @@ public class FuncionarioComissao : Funcionario
     public FuncionarioComissao(string nomes, string apelidos, string nif,
         double vendas_totais_entra, double comissao_vendas_entra) : base(nomes, apelidos, nif)
     {
+        // Ao não meter estas duas variáveis na classe mãe, é possível usá-la para todos os funcionários da empresa.
+        // Por exemplo, quem faz entregas ou trabalha na contabilidade, não recebe comissão, logo podemos usar a classe mãe para todo o tipo de
+        // funcionários na empresa.
+
         vendas_totais = vendas_totais_entra;        // valida as vendas
         comissao_vendas = comissao_vendas_entra;    // valida a comissao
     }
@@ -21,7 +25,7 @@ public class FuncionarioComissao : Funcionario
             if (value < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(value),
-                    value, $"{nameof(vendas_totais)} tem que ser >= 0");
+                    value, $"{nameof(vendas_totais)} tem que ser >= 0"); // é indiferente usar a variavel ou a classe
             }
             vendas_totais = value;
         }
