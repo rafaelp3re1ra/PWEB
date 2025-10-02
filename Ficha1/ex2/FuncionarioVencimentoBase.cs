@@ -30,7 +30,6 @@ class FuncionarioVencimentoBase : Funcionario
     public override string ToString()
     {
         return $"Funcionario (Vencimento Base): {base.ToString()}"
-
             + $"Vencimento Base = {VencimentoBase:F2}";
     }
 }
