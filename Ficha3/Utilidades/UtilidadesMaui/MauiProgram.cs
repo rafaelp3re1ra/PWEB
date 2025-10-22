@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using UtilidadesRCL.Data;
 
 namespace UtilidadesMaui
 {
@@ -18,6 +19,7 @@ namespace UtilidadesMaui
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Services.AddDataServices();
     		builder.Logging.AddDebug();
 #endif
 

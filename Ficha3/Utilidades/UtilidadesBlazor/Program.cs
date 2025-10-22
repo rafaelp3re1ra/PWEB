@@ -1,10 +1,13 @@
 using UtilidadesBlazor.Components;
+using UtilidadesRCL.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddDataServices();
 
 var app = builder.Build();
 
