@@ -30,11 +30,18 @@
                 <InputText id="urlimagem" @bind-Value="Categoria.UrlImagem" class="form-control" /> 
                 <ValidationMessage For="() => Categoria.UrlImagem" class="text-danger" /> 
             </div>        
-            @* <div class="mb-3">
+            
+            <div class="mb-3">
                 <label for="imagem" class="form-label">Imagem:</label> 
-                <InputText id="imagem" @bind-Value="Categoria.Imagem" class="form-control" /> 
+                <InputFile id="imagem" OnChange="OnImageChange" class="form-control" 
+                    accept=".png, .jpg, .jpeg" />
+                @if (previewUrl is not null)
+                {
+                    <img src="@previewUrl" style="max-width: 200px; margin-top: 10px" />
+                }
                 <ValidationMessage For="() => Categoria.Imagem" class="text-danger" /> 
-            </div> *@        
+            </div> 
+
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -56,4 +63,21 @@
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/categoria");
     }
+
+    private string? previewUrl;
+    private async Task OnImageChange(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        using var stream = new MemoryStream();
+        await file.OpenReadStream().CopyToAsync(stream);
+        Categoria.Imagem = stream.ToArray();
+
+        // Cria pré-visualização
+        using var previewStream = new MemoryStream();
+        await file.OpenReadStream().CopyToAsync(previewStream);
+        var base64 = Convert.ToBase64String(previewStream.ToArray());
+        previewUrl = $"data:{file.ContentType};base64,{base64}";
+    }
+
 }
