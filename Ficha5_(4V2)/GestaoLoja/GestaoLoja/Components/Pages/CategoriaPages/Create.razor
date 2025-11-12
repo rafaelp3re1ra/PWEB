@@ -1,0 +1,59 @@
+﻿@page "/categoria/create"
+@using Microsoft.EntityFrameworkCore
+@using GestaoLoja.Entities
+@inject IDbContextFactory<GestaoLoja.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Categoria</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Categoria" OnValidSubmit="AddCategoria" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome:</label> 
+                <InputText id="nome" @bind-Value="Categoria.Nome" class="form-control" /> 
+                <ValidationMessage For="() => Categoria.Nome" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="ordem" class="form-label">Ordem:</label> 
+                <InputNumber id="ordem" @bind-Value="Categoria.Ordem" class="form-control" /> 
+                <ValidationMessage For="() => Categoria.Ordem" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="urlimagem" class="form-label">UrlImagem:</label> 
+                <InputText id="urlimagem" @bind-Value="Categoria.UrlImagem" class="form-control" /> 
+                <ValidationMessage For="() => Categoria.UrlImagem" class="text-danger" /> 
+            </div>        
+            @* <div class="mb-3">
+                <label for="imagem" class="form-label">Imagem:</label> 
+                <InputText id="imagem" @bind-Value="Categoria.Imagem" class="form-control" /> 
+                <ValidationMessage For="() => Categoria.Imagem" class="text-danger" /> 
+            </div> *@        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/categoria">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Categoria Categoria { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddCategoria()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Categorias.Add(Categoria);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/categoria");
+    }
+}

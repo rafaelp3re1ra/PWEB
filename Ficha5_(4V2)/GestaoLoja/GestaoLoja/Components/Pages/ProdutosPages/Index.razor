@@ -1,0 +1,47 @@
+﻿@page "/produtos"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using GestaoLoja.Entities
+@using GestaoLoja.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<GestaoLoja.Data.ApplicationDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="produtos/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Produtos">
+    <PropertyColumn Property="produtos => produtos.Nome" />
+    <PropertyColumn Property="produtos => produtos.Detalhe" />
+    <PropertyColumn Property="produtos => produtos.UrlImagem" />
+    <PropertyColumn Property="produtos => produtos.Imagem" />
+    <PropertyColumn Property="produtos => produtos.Preco" />
+    <PropertyColumn Property="produtos => produtos.Promocao" />
+    <PropertyColumn Property="produtos => produtos.MaisVendido" />
+    <PropertyColumn Property="produtos => produtos.EmStock" />
+    <PropertyColumn Property="produtos => produtos.Disponivel" />
+    <PropertyColumn Property="produtos => produtos.Origem" />
+    <PropertyColumn Property="produtos => produtos.CategoriaId" />
+    <PropertyColumn Property="produtos => produtos.ModoEntregaId" />
+
+    <TemplateColumn Context="produtos">
+        <a href="@($"produtos/edit?id={produtos.Id}")">Edit</a> |
+        <a href="@($"produtos/details?id={produtos.Id}")">Details</a> |
+        <a href="@($"produtos/delete?id={produtos.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private ApplicationDbContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

@@ -1,0 +1,48 @@
+﻿@page "/modoentregas/details"
+@using Microsoft.EntityFrameworkCore
+@using GestaoLoja.Entities
+@inject IDbContextFactory<GestaoLoja.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>ModoEntrega</h2>
+    <hr />
+    @if (modoentrega is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Nome</dt>
+            <dd class="col-sm-10">@modoentrega.Nome</dd>
+            <dt class="col-sm-2">Detalhe</dt>
+            <dd class="col-sm-10">@modoentrega.Detalhe</dd>
+        </dl>
+        <div>
+            <a href="@($"/modoentregas/edit?id={modoentrega.Id}")">Edit</a> |
+            <a href="@($"/modoentregas")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private ModoEntrega? modoentrega;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        modoentrega = await context.ModosEntrega.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (modoentrega is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

@@ -1,0 +1,94 @@
+﻿@page "/modoentregas/edit"
+@using Microsoft.EntityFrameworkCore
+@using GestaoLoja.Entities
+@inject IDbContextFactory<GestaoLoja.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>ModoEntrega</h2>
+<hr />
+@if (ModoEntrega is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="ModoEntrega" OnValidSubmit="UpdateModoEntrega" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="ModoEntrega.Id" value="@ModoEntrega.Id" />
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome:</label>
+                    <InputText id="nome" @bind-Value="ModoEntrega.Nome" class="form-control" aria-required="true"/>
+                    <ValidationMessage For="() => ModoEntrega.Nome" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="detalhe" class="form-label">Detalhe:</label>
+                    <InputText id="detalhe" @bind-Value="ModoEntrega.Detalhe" class="form-control" />
+                    <ValidationMessage For="() => ModoEntrega.Detalhe" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/modoentregas">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private ModoEntrega? ModoEntrega { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        ModoEntrega ??= await context.ModosEntrega.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (ModoEntrega is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateModoEntrega()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(ModoEntrega!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ModoEntregaExists(ModoEntrega!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/modoentregas");
+    }
+
+    private bool ModoEntregaExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.ModosEntrega.Any(e => e.Id == id);
+    }
+}

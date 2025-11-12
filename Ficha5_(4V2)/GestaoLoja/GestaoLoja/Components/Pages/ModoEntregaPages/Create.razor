@@ -1,0 +1,49 @@
+﻿@page "/modoentregas/create"
+@using Microsoft.EntityFrameworkCore
+@using GestaoLoja.Entities
+@inject IDbContextFactory<GestaoLoja.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>ModoEntrega</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="ModoEntrega" OnValidSubmit="AddModoEntrega" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome:</label> 
+                <InputText id="nome" @bind-Value="ModoEntrega.Nome" class="form-control" aria-required="true"/> 
+                <ValidationMessage For="() => ModoEntrega.Nome" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="detalhe" class="form-label">Detalhe:</label> 
+                <InputText id="detalhe" @bind-Value="ModoEntrega.Detalhe" class="form-control" /> 
+                <ValidationMessage For="() => ModoEntrega.Detalhe" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/modoentregas">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private ModoEntrega ModoEntrega { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddModoEntrega()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.ModosEntrega.Add(ModoEntrega);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/modoentregas");
+    }
+}
